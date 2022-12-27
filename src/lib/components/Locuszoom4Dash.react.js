@@ -8,20 +8,6 @@ import LocuszoomD3 from '../d3/locuszoom';
  */
 export default class Locuszoom4Dash extends Component {
 
-    // constructor(props) {
-    //     super(props);
-    //     this.getRef = this.getRef.bind(this);
-    //     self.regionChanged = self.regionChanged.bind(self);
-
-    // Attach a callback to a target component
-    //const targetComponent = document.getElementById('target-component');
-    //ReactSyntheticEvent.on(targetComponent, 'someEvent', callback);
-    
-    // Stop listening for the event
-    //ReactSyntheticEvent.off(targetComponent, 'someEvent', callback);
-
-    // }
-
     componentDidMount() {
         this.locuszoom = new LocuszoomD3(this.el, this.props, data => {
             const {setProps} = this.props;
