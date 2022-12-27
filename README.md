@@ -1,6 +1,116 @@
 # Locuszoom 4 DASH
 
-Locuszoom 4 DASH is a Dash component library.
+Locuszoom 4 DASH is a Dash component library, based on the [LocusZoom.js package](https://statgen.github.io/locuszoom/docs/api/index.html) for interactively visualizing statistical genetic data from customizable sources .
+
+This version does not expose all of the functionality of LocusZoom.js, but it provdes a great starting point to include LocusZoom in any Dash application.
+
+This is the minimal python code to render a LocusZoom image:
+
+```python
+import locuszoom_4_dash
+
+from dash import Dash, callback, html, Input, Output, dcc, State, callback_context
+from dash.exceptions import PreventUpdate
+
+external_stylesheets = [
+    'https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css',
+    'https://cdn.jsdelivr.net/npm/locuszoom@0.14.0/dist/locuszoom.css'
+]
+data_sources = [
+            {
+                'name': 'assoc',
+                'data': [
+                    'AssociationLZ',
+                    {
+                        'url': 'https://portaldev.sph.umich.edu/api/v1/statistic/single/',
+                        'source': 45,
+                        'id_field':'variant',
+                        'build': 'GRCh37',
+                    },
+                ]
+            },
+            {
+                'name': 'ld',
+                'data': [
+                    'LDServer',
+                    {
+                        'url': 'https://portaldev.sph.umich.edu/ld/',
+                        'source': '1000G',
+                        'population': 'ALL',
+                        'build': 'GRCh37',
+                    },
+                ]
+            },
+            {
+                'name': 'recomb',
+                'data': [
+                    'RecombLZ',
+                    {
+                        'url': 'https://portaldev.sph.umich.edu/api/v1/annotation/recomb/results/',
+                        'build': 'GRCh37',
+                    },
+                ]
+            },
+            {
+                'name': 'gene',
+                'data': [
+                    'GeneLZ',
+                    {
+                        'url': 'https://portaldev.sph.umich.edu/api/v1/annotation/genes/',
+                        'build': 'GRCh37',
+                    },
+                ]
+            },
+            {
+                'name': 'constraint',
+                'data': [
+                    'GeneConstraintLZ',
+                    {
+                        'url': 'https://gnomad.broadinstitute.org/api/',
+                        'build': 'GRCh37',
+                    },
+                ]
+            },
+        ]
+lz_layout = {
+            'type':'plot',
+            'name':'standard_association',
+}
+
+default_state = {
+    'chr': '10',
+    'start': 114358349,
+    'end': 114958349,
+    'genome_build': 'GRCh37',
+    'variant': "10:114758349_C/T"
+}
+
+app = Dash(__name__, external_stylesheets=external_stylesheets)
+
+# Main definition of LocusZoom
+# This contains many of the data sources from the Samples, but not all plots use all data sources
+lz = locuszoom_4_dash.Locuszoom4Dash(
+        id='lz',
+        data_sources=data_sources,
+        layout=lz_layout,
+        state=default_state
+    )
+
+app.layout = html.Div([
+    lz,
+])
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
+
+```
+
+![LocusZoom 4 DASH minimal](https://github.com/thondeboer/locuszoom_4_dash/img/LocusZoom_4_DASH_minimal.png "LocusZoom 4 DASH minimal")
+
+It exposes the ```state``` for the LocusZoom image, which contains the focus of the plot. It allows the user to update the location of the focus from the DASH component. It also allows the user to change the location by dragging the image and it will conversely update the attributes for the components, so Dash callbacks can respond to it.
+
+![LocusZoom 4 DASH full](https://github.com/thondeboer/locuszoom_4_dash/img/LocusZoom_4_DASH_full.gif "LocusZoom 4 DASH full")
+
 
 Get started with:
 1. Install Dash and its dependencies: https://dash.plotly.com/installation
@@ -72,7 +182,7 @@ If you have selected install_dependencies during the prompt, you can skip this p
 
 3. Test your tarball by copying it into a new environment and installing it locally:
     ```
-    $ pip install locuszoom_4_dash-0.0.1.tar.gz
+    $ pip install locuszoom_4_dash-0.7.0.tar.gz
     ```
 
 4. If it works, then you can publish the component to NPM and PyPI:
