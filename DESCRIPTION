@@ -1,7 +1,7 @@
 Package: locuszoom4Dash
-Title: LocusZoom is a Javascript/d3 embeddable plugin for interactively visualizing statistical genetic data from customizable sources.
-Version: 0.0.1
-Description: LocusZoom is a Javascript/d3 embeddable plugin for interactively visualizing statistical genetic data from customizable sources.
+Title: LocusZoom 4 DASH
+Version: 0.7.0
+Description: LocusZoom 4 DASH is a Dash component for interactively visualizing statistical genetic data from customizable sources, based on LocusZoom.js.
 Depends: R (>= 3.0.2)
 Imports: 
 Suggests: 
