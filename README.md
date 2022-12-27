@@ -4,6 +4,8 @@ Locuszoom 4 DASH is a Dash component library, based on the [LocusZoom.js package
 
 This version does not expose all of the functionality of LocusZoom.js, but it provdes a great starting point to include LocusZoom in any Dash application.
 
+![LocusZoom 4 DASH minimal](https://github.com/thondeboer/locuszoom_4_dash/raw/master/img/LocusZoom_4_DASH_minimal.png "LocusZoom 4 DASH minimal")
+
 This is the minimal python code to render a LocusZoom image:
 
 ```python
@@ -105,8 +107,6 @@ if __name__ == '__main__':
 
 ```
 
-img/LocusZoom_4_DASH_full.gif
-![LocusZoom 4 DASH minimal](https://github.com/thondeboer/locuszoom_4_dash/raw/master/img/LocusZoom_4_DASH_minimal.png "LocusZoom 4 DASH minimal")
 
 It exposes the ```state``` for the LocusZoom image, which contains the focus of the plot. It allows the user to update the location of the focus from the DASH component. It also allows the user to change the location by dragging the image and it will conversely update the attributes for the components, so Dash callbacks can respond to it.
 
