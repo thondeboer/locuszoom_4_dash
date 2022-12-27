@@ -1,0 +1,11 @@
+include locuszoom_4_dash/locuszoom_4_dash.min.js
+include locuszoom_4_dash/locuszoom_4_dash.min.js.map
+include locuszoom_4_dash/async-*.js
+include locuszoom_4_dash/async-*.js.map
+include locuszoom_4_dash/*-shared.js
+include locuszoom_4_dash/*-shared.js.map
+include locuszoom_4_dash/metadata.json
+include locuszoom_4_dash/package-info.json
+include README.md
+include LICENSE
+include package.json

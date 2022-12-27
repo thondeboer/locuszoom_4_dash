@@ -1,0 +1,54 @@
+{
+  "src/lib/components/Locuszoom4Dash.react.js": {
+    "description": "Locuszoom4Dash is the DASH version of LocusZoom.js.\nIt takes ...",
+    "displayName": "Locuszoom4Dash",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this component in Dash callbacks"
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      },
+      "layout": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "The layout of the Locuszoom plot.\n\nEither choose from one of the 4 standard layouts, with an optional override,\nor define the layout manually.\nExample choosing standard layout\n{\n     'type': 'plot',\n     'name': 'standard_association',\n     'override': {\n         'label_font_size': 20\n     }\n }\n\n'type' should always be plot, may be extended in the future\n'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility']\nSee: https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html for more on layout options\nand requirements for the data sources\n\nExample choosing manual layout\n{\n     'width': 800,\n     'panels': [\n     {\n         'id' : \"association\",\n         'height': 300,\n         'data_layers': [\n              {\n                  'id': \"association\",\n                  'type': \"scatter\",\n                  'x_axis': { field: \"assoc:position\" },\n                  'y_axis': { field: \"assoc:log_pvalue\" }\n              }\n         ]\n     }\n     ]\n }"
+      },
+      "data_sources": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "object"
+          }
+        },
+        "required": false,
+        "description": "Definition of the datasrources for this Locuszoom\n\nFormat example:\n [{\n     name: \"assoc\",\n     data: [\n         \"AssociationLZ\",\n         {\n             url:  \"https://portaldev.sph.umich.edu/api/v1/statistic/single/\",\n             source: 45,\n             id_field: 'variant',\n             population: 'ALL',\n             build: 'GRCh37'\n         }\n     ]\n }]"
+      },
+      "state": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "The currently selected region for the LocusZoom plot\n\nFormat example: { state: { chr: 6, start: 20379709, end: 20979709 } }"
+      },
+      "regionChange": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "The change of region, initiated by the user in the LocusZoom plot\n\nFormat example: { state: { chr: 6, start: 20379709, end: 20979709 } }"
+      }
+    }
+  }
+}
