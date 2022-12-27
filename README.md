@@ -1,6 +1,6 @@
 # Locuszoom 4 DASH
 
-Locuszoom 4 DASH is a Dash component library, based on the [LocusZoom.js package](https://statgen.github.io/locuszoom/docs/api/index.html) for interactively visualizing statistical genetic data from customizable sources .
+Locuszoom 4 DASH is a Dash component library, based on the [LocusZoom.js package](https://statgen.github.io/locuszoom/docs/api/index.html) for interactively visualizing statistical genetic data from customizable sources.
 
 This version does not expose all of the functionality of LocusZoom.js, but it provdes a great starting point to include LocusZoom in any Dash application.
 
@@ -112,8 +112,9 @@ It exposes the ```state``` for the LocusZoom image, which contains the focus of 
 
 ![LocusZoom 4 DASH full](https://github.com/thondeboer/locuszoom_4_dash/raw/master/img/LocusZoom_4_DASH_full.gif "LocusZoom 4 DASH full")
 
+See the file [usage.py](https://github.com/thondeboer/locuszoom_4_dash/blob/master/usage.py) for the source code for the App in the GIF.
 
-Get started with:
+# Get started with:
 1. Install Dash and its dependencies: https://dash.plotly.com/installation
 2. Run `python usage.py`
 3. Visit http://localhost:8050 in your web browser
