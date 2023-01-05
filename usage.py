@@ -3,6 +3,7 @@ import requests, logging
 
 from dash import Dash, callback, html, Input, Output, dcc, State, callback_context
 from dash.exceptions import PreventUpdate
+from flask import Flask
 
 external_stylesheets = [
     'https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css',
@@ -11,7 +12,12 @@ external_stylesheets = [
 
 logger = logging.getLogger()
 
-app = Dash(__name__, external_stylesheets=external_stylesheets)
+server = Flask(__name__)
+
+app = Dash(
+    server=server,
+    external_stylesheets = external_stylesheets,
+)
 
 #Some defaults
 default_state = {
@@ -34,7 +40,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'AssociationLZ',
                     {
-                        'url': 'http://127.0.0.1:5000/api/statistic/single/',
+                        'url': 'http://10.112.80.49:16888/api/statistic/single/',
                         'source': 'AD',
                         'id_field':'variant',
                         'build': 'GRCh37',
@@ -98,7 +104,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'PheWASLZ',
                     {
-                        'url': 'https://portaldev.sph.umich.edu/api/v1/statistic/phewas/',
+                        'url': 'http://10.112.80.49:16888/api/statistic/phewas/',
                         'build': 'GRCh37',
                     },
                 ]
@@ -224,4 +230,4 @@ def change_region(zoomin, zoomout, gene, regionChange, coordinates, state):
     return state, '', f"{state['chr']}:{state['start']}-{state['end']}", f"Region: {state['end']-state['start']:,} bp"
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, host='0.0.0.0')

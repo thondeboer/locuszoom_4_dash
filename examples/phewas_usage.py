@@ -29,40 +29,6 @@ min_region_scale = 20_000
 lz = locuszoom_4_dash.Locuszoom4Dash(
         id='lz',
         data_sources=[
-            # {
-            #     'name': 'assoc',
-            #     'data': [
-            #         'AssociationLZ',
-            #         {
-            #             'url': 'http://127.0.0.1:5000/api/statistic/single/',
-            #             'source': 'AD',
-            #             'id_field':'variant',
-            #             'build': 'GRCh37',
-            #         },
-            #     ]
-            # },
-            # {
-            #     'name': 'ld',
-            #     'data': [
-            #         'LDServer',
-            #         {
-            #             'url': 'https://portaldev.sph.umich.edu/ld/',
-            #             'source': '1000G',
-            #             'population': 'ALL',
-            #             'build': 'GRCh37',
-            #         },
-            #     ]
-            # },
-            # {
-            #     'name': 'recomb',
-            #     'data': [
-            #         'RecombLZ',
-            #         {
-            #             'url': 'https://portaldev.sph.umich.edu/api/v1/annotation/recomb/results/',
-            #             'build': 'GRCh37',
-            #         },
-            #     ]
-            # },
             {
                 'name': 'gene',
                 'data': [
@@ -83,22 +49,12 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     },
                 ]
             },
-            # {
-            #     'name': 'catalog',
-            #     'data': [
-            #         'GwasCatalogLZ',
-            #         {
-            #             'url': 'https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/',
-            #             'build': 'GRCh37',
-            #         },
-            #     ]
-            # },
             {
                 'name': 'phewas',
                 'data': [
                     'PheWASLZ',
                     {
-                        'url': 'http://127.0.0.1:5000/api/statistic/phewas/',
+                        'url': 'https://portaldev.sph.umich.edu/api/v1/statistic/phewas/',
                         'build': 'GRCh37',
                     },
                 ]
