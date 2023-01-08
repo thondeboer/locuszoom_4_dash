@@ -1,11 +1,11 @@
-# To make testing easier during development, adding top directory as module path for easier import
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 import locuszoom_4_dash
-import logging, json
+import requests, logging, json
 
 from dash import Dash, callback, html, Input, Output, dcc, State, callback_context
+from dash.exceptions import PreventUpdate
 
 external_stylesheets = [
     'https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css',
@@ -29,7 +29,9 @@ max_region_scale = 10_000_000
 min_region_scale = 20_000
 
 # Main definition of LocusZoom
+LOCAL_API = 'http://127.0.0.1:5000/api'
 BASE_API = 'https://portaldev.sph.umich.edu/api/v1'
+BASE_API = LOCAL_API
 lz = locuszoom_4_dash.Locuszoom4Dash(
         id='lz',
         data_sources=[
@@ -68,7 +70,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
         ],
         layout={
             'type':'plot',
-            'name':'standard_phewas',
+            'name':'modified_phewas',
             'override': {
                 'max_region_scale': max_region_scale,
                 'min_region_scale': min_region_scale,

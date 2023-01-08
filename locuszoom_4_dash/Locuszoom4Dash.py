@@ -22,6 +22,12 @@ Keyword arguments:
     population: 'ALL',              build: 'GRCh37'          }      ]
     }].
 
+- elementSelection (dict; optional):
+    Element in the plot selected  Format: The element attribute of the
+    LocusZoom data object is returned. It is not supposed to be edited
+    in Dash, but only used for reporting selections in the LocusZoom
+    plot.
+
 - layout (dict; optional):
     The layout of the Locuszoom plot.  Either choose from one of the 4
     standard layouts, with an optional override, or define the layout
@@ -29,7 +35,7 @@ Keyword arguments:
     'name': 'standard_association',      'override': {
     'label_font_size': 20      }  }  'type' should always be plot, may
     be extended in the future 'name' Should be one of
-    ['standard_association','association_catalog','standard_phewas','coaccessibility']
+    ['standard_association','association_catalog','standard_phewas','coaccessibility','interval_association']
     See:
     https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html
     for more on layout options and requirements for the data sources
@@ -54,10 +60,10 @@ Keyword arguments:
     _namespace = 'locuszoom_4_dash'
     _type = 'Locuszoom4Dash'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, layout=Component.UNDEFINED, data_sources=Component.UNDEFINED, state=Component.UNDEFINED, regionChange=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'data_sources', 'layout', 'regionChange', 'state']
+    def __init__(self, id=Component.UNDEFINED, layout=Component.UNDEFINED, data_sources=Component.UNDEFINED, state=Component.UNDEFINED, regionChange=Component.UNDEFINED, elementSelection=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'data_sources', 'elementSelection', 'layout', 'regionChange', 'state']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'data_sources', 'layout', 'regionChange', 'state']
+        self.available_properties = ['id', 'data_sources', 'elementSelection', 'layout', 'regionChange', 'state']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

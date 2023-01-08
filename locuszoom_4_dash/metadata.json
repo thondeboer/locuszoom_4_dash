@@ -23,7 +23,7 @@
           "name": "object"
         },
         "required": false,
-        "description": "The layout of the Locuszoom plot.\n\nEither choose from one of the 4 standard layouts, with an optional override,\nor define the layout manually.\nExample choosing standard layout\n{\n     'type': 'plot',\n     'name': 'standard_association',\n     'override': {\n         'label_font_size': 20\n     }\n }\n\n'type' should always be plot, may be extended in the future\n'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility']\nSee: https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html for more on layout options\nand requirements for the data sources\n\nExample choosing manual layout\n{\n     'width': 800,\n     'panels': [\n     {\n         'id' : \"association\",\n         'height': 300,\n         'data_layers': [\n              {\n                  'id': \"association\",\n                  'type': \"scatter\",\n                  'x_axis': { field: \"assoc:position\" },\n                  'y_axis': { field: \"assoc:log_pvalue\" }\n              }\n         ]\n     }\n     ]\n }"
+        "description": "The layout of the Locuszoom plot.\n\nEither choose from one of the 4 standard layouts, with an optional override,\nor define the layout manually.\nExample choosing standard layout\n{\n     'type': 'plot',\n     'name': 'standard_association',\n     'override': {\n         'label_font_size': 20\n     }\n }\n\n'type' should always be plot, may be extended in the future\n'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility','interval_association']\nSee: https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html for more on layout options\nand requirements for the data sources\n\nExample choosing manual layout\n{\n     'width': 800,\n     'panels': [\n     {\n         'id' : \"association\",\n         'height': 300,\n         'data_layers': [\n              {\n                  'id': \"association\",\n                  'type': \"scatter\",\n                  'x_axis': { field: \"assoc:position\" },\n                  'y_axis': { field: \"assoc:log_pvalue\" }\n              }\n         ]\n     }\n     ]\n }"
       },
       "data_sources": {
         "type": {
@@ -48,6 +48,13 @@
         },
         "required": false,
         "description": "The change of region, initiated by the user in the LocusZoom plot\n\nFormat example: { state: { chr: 6, start: 20379709, end: 20979709 } }"
+      },
+      "elementSelection": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Element in the plot selected\n\nFormat: The element attribute of the LocusZoom data object is returned.\nIt is not supposed to be edited in Dash, but only used for reporting selections in the LocusZoom plot"
       }
     }
   }

@@ -1,3 +1,6 @@
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
 import locuszoom_4_dash
 
 from dash import Dash, callback, html, Input, Output, dcc, State, callback_context

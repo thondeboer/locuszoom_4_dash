@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import LocuszoomD3 from '../d3/locuszoom';
 
@@ -9,13 +9,52 @@ import LocuszoomD3 from '../d3/locuszoom';
 export default class Locuszoom4Dash extends Component {
 
     componentDidMount() {
-        this.locuszoom = new LocuszoomD3(this.el, this.props, data => {
-            const {setProps} = this.props;
-            const regionChange = {regionChange: data.data};
+        this.locuszoom = new LocuszoomD3(
+            this.el,
+            this.props,
+            onRegionChange => {
+                const { setProps } = this.props;
+                const regionChange = { regionChange: onRegionChange.data };
 
-            if (setProps) { setProps(regionChange); }
-            else { this.setState({regionChange}); }
-        });
+                if (setProps) { setProps(regionChange); }
+                else { this.setState({ regionChange }); }
+            },
+            OnElementSelection => {
+                // console.log(OnElementSelection);
+                const { setProps } = this.props;
+                var elementSelection;
+                // TODO Figure out a better way, but for now, check target.id and make case
+                if (OnElementSelection.target.id === 'genes') {
+                    // For genes, just get the name and some basic stats, since data is too complex for JSONify
+                    // TODO Parent and Transcripts are the ciricular defined attribute, so just drop that in a clone
+                    // https://stackoverflow.com/questions/34698905/how-can-i-clone-a-javascript-object-except-for-one-key
+                    // Trouble implementing as described... DO LATER
+                    const x = Object.assign({}, OnElementSelection.data.element);
+                    delete x.transcripts;
+                    delete x.parent;
+                    elementSelection = {
+                        elementSelection: {
+                            element: x
+                        }
+                    };
+                } else if (
+                    // Calling out the targets specifically, could do !== 'genes' but could break new panels added
+                    (((OnElementSelection.target.id === 'associationcatalog') ||
+                    (OnElementSelection.target.id === 'annotationcatalog')) ||
+                    ((OnElementSelection.target.id === 'phewas') ||
+                    (OnElementSelection.target.id === 'intervals'))) ||
+                    (OnElementSelection.target.id === 'association')
+                ) {
+                    // here we get the whole shabang...
+                    elementSelection = {
+                        elementSelection: OnElementSelection.data
+                    }
+                };
+                // TODO Check phewas and others
+                if (setProps) { setProps(elementSelection); }
+                else { this.setState({ elementSelection }); }
+            },
+        );
     }
 
     componentDidUpdate() {
@@ -23,7 +62,7 @@ export default class Locuszoom4Dash extends Component {
     }
 
     render() {
-        return <div id={this.props.id} ref={el => {this.el = el}}/>;
+        return <div id={this.props.id} ref={el => { this.el = el }} />;
     }
 }
 
@@ -56,7 +95,7 @@ Locuszoom4Dash.propTypes = {
      *  }
      * 
      * 'type' should always be plot, may be extended in the future
-     * 'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility']
+     * 'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility','interval_association']
      * See: https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html for more on layout options
      * and requirements for the data sources
      * 
@@ -118,5 +157,12 @@ Locuszoom4Dash.propTypes = {
      * Format example: { state: { chr: 6, start: 20379709, end: 20979709 } }
      */
     regionChange: PropTypes.object,
+    /**
+     * Element in the plot selected
+     * 
+     * Format: The element attribute of the LocusZoom data object is returned.
+     * It is not supposed to be edited in Dash, but only used for reporting selections in the LocusZoom plot
+     */
+    elementSelection: PropTypes.object,
 };
 

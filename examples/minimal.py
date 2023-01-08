@@ -1,7 +1,10 @@
+# To make testing easier during development, adding top directory as module path for easier import
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
 import locuszoom_4_dash
 
-from dash import Dash, callback, html, Input, Output, dcc, State, callback_context
-from dash.exceptions import PreventUpdate
+from dash import Dash, html
 
 external_stylesheets = [
     'https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css',
@@ -79,7 +82,6 @@ default_state = {
 app = Dash(__name__, external_stylesheets=external_stylesheets)
 
 # Main definition of LocusZoom
-# This contains many of the data sources from the Samples, but not all plots use all data sources
 lz = locuszoom_4_dash.Locuszoom4Dash(
         id='lz',
         data_sources=data_sources,

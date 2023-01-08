@@ -26,6 +26,10 @@ Format example:
          }
      ]
  }]
+- `elementSelection` (Dict; optional): Element in the plot selected
+
+Format: The element attribute of the LocusZoom data object is returned.
+It is not supposed to be edited in Dash, but only used for reporting selections in the LocusZoom plot
 - `layout` (Dict; optional): The layout of the Locuszoom plot.
 
 Either choose from one of the 4 standard layouts, with an optional override,
@@ -40,7 +44,7 @@ Example choosing standard layout
  }
 
 'type' should always be plot, may be extended in the future
-'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility']
+'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility','interval_association']
 See: https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html for more on layout options
 and requirements for the data sources
 
@@ -70,7 +74,7 @@ Format example: { state: { chr: 6, start: 20379709, end: 20979709 } }
 Format example: { state: { chr: 6, start: 20379709, end: 20979709 } }
 """
 function locuszoom4dash(; kwargs...)
-        available_props = Symbol[:id, :data_sources, :layout, :regionChange, :state]
+        available_props = Symbol[:id, :data_sources, :elementSelection, :layout, :regionChange, :state]
         wild_props = Symbol[]
         return Component("locuszoom4dash", "Locuszoom4Dash", "locuszoom_4_dash", available_props, wild_props; kwargs...)
 end

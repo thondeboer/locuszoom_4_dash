@@ -1,6 +1,6 @@
 {
   "name": "locuszoom_4_dash",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "LocusZoom is a Javascript/d3 embeddable plugin for interactively visualizing statistical genetic data from customizable sources.",
   "repository": {
     "type": "git",

@@ -109,14 +109,45 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     },
                 ]
             },
+            {
+                'name': 'intervals',
+                'data': [   
+                    'IntervalLZ',
+                    {
+                        'url': f'{BASE_API}/annotation/intervals/results/',
+                        'source': 19,
+                        'trackInfo': "<strong>Chromatin State Segmentation by HMM from ENCODE/Broad</strong><br>Build: 37<br>Assay: ChIP-seq<br>Tissue: ALL</div>"
+                    },
+                ]
+            },
         ],
         layout={
             'type':'plot',
-            'name':'modified_association_catalog',
+            'name':'association_catalog',
             'override': {
                 'max_region_scale': max_region_scale,
                 'min_region_scale': min_region_scale,
             },
+            # See https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html for name of panels
+            'addPanel': [
+                {
+                    'name': 'intervals',
+                    'overrides': {
+                        'height': 400
+                    }
+                }
+            ],
+            # See https://statgen.github.io/locuszoom/docs/guides/interactivity.html for information on mutate_attrs method
+            'mutate_attrs': [
+                {
+                    'jsonpath': '$..panels[?(@.tag === "gwascatalog")].height',
+                    'setval': 75
+                },
+                {
+                    'jsonpath': '$..panels[?(@.tag === "gwascatalog")].height',
+                    'setval': 75
+                },
+            ]
         },
         state=default_state
     )

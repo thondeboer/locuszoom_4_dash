@@ -1,4 +1,3 @@
-# To make testing easier during development, adding top directory as module path for easier import
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
@@ -35,17 +34,11 @@ default_state = {
 max_region_scale = 10_000_000
 min_region_scale = 20_000
 
-
-JS = '''
-function runme() {
-    LocusZoom.Layouts.mutate_attrs(layout, '$..panels[?(@.tag === "intervals")].legend.hidden', false);
-    LocusZoom.Layouts.mutate_attrs(layout, '$..data_layers[?(@.tag === "intervals")].always_hide_legend', false);
-}
-'''
-
 # Main definition of LocusZoom
 # This contains many of the data sources from the Samples, but not all plots use all data sources
 BASE_API = 'https://portaldev.sph.umich.edu/api/v1'
+# BASE_API = 'http://10.112.80.49:16888/api'
+LOCAL_API = 'http://127.0.0.1:5000/api'
 lz = locuszoom_4_dash.Locuszoom4Dash(
         id='lz',
         data_sources=[
@@ -54,8 +47,8 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'AssociationLZ',
                     {
-                        'url': f'{BASE_API}/statistic/single/',
-                        'source': 45,
+                        'url': f'{LOCAL_API}/statistic/single/',
+                        'source': 'AD',
                         'id_field':'variant',
                         'trackInfo': "<strong>GWAS study: 45</strong><br>Build: {BUILD}<br></div>",
                         'build': BUILD,
@@ -120,8 +113,8 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'IntervalLZ',
                     {
-                        'url': f'{BASE_API}/annotation/intervals/results/',
-                        'source': 19,
+                        'url': f'{LOCAL_API}/annotation/intervals/results/',
+                        'source': "'500KB'",
                         'trackInfo': "<strong>Chromatin State Segmentation by HMM from ENCODE/Broad</strong><br>Build: 37<br>Assay: ChIP-seq<br>Tissue: ALL</div>"
                     },
                 ]
@@ -129,21 +122,11 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
         ],
         layout={
             'type':'plot',
-            'name':'interval_association',
+            'name':'modified_interval_association',
             'override': {
                 'max_region_scale': max_region_scale,
                 'min_region_scale': min_region_scale,
             },
-            'mutate_attrs': [
-                {
-                    'jsonpath': '$..panels[?(@.tag === "intervals")].legend.hidden',
-                    'setval': False
-                },
-                {
-                    'jsonpath': '$..data_layers[?(@.tag === "intervals")].always_hide_legend',
-                    'setval': False
-                },
-            ]
         },
         state=default_state
     )

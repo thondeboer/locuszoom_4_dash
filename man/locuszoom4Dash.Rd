@@ -10,8 +10,8 @@ Locuszoom4Dash is the DASH version of LocusZoom.js. It takes ...
 }
 
 \usage{
-locuszoom4Dash(id=NULL, data_sources=NULL, layout=NULL, regionChange=NULL,
-state=NULL)
+locuszoom4Dash(id=NULL, data_sources=NULL, elementSelection=NULL,
+layout=NULL, regionChange=NULL, state=NULL)
 }
 
 \arguments{
@@ -34,6 +34,11 @@ Format example:
      ]
  }]}
 
+\item{elementSelection}{Named list. Element in the plot selected
+
+Format: The element attribute of the LocusZoom data object is returned.
+It is not supposed to be edited in Dash, but only used for reporting selections in the LocusZoom plot}
+
 \item{layout}{Named list. The layout of the Locuszoom plot.
 
 Either choose from one of the 4 standard layouts, with an optional override,
@@ -48,7 +53,7 @@ Example choosing standard layout
  }
 
 'type' should always be plot, may be extended in the future
-'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility']
+'name' Should be one of ['standard_association','association_catalog','standard_phewas','coaccessibility','interval_association']
 See: https://statgen.github.io/locuszoom/docs/api/module-LocusZoom_Layouts.html for more on layout options
 and requirements for the data sources
 

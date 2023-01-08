@@ -1,3 +1,4 @@
 # dash is required to call `build:py`
+# Requests is used in the usage app to query for gene names
 dash[dev]>=2.0.0
 requests

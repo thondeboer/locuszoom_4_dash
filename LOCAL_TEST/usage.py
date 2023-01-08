@@ -1,5 +1,9 @@
+# To make testing easier during development, adding top directory as module path for easier import
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
 import locuszoom_4_dash
-import requests, logging
+import requests, logging, json
 
 from dash import Dash, callback, html, Input, Output, dcc, State, callback_context
 from dash.exceptions import PreventUpdate
@@ -20,11 +24,12 @@ app = Dash(
 )
 
 #Some defaults
+BUILD = 'GRCh37'
 default_state = {
     'chr': '10',
     'start': 114358349,
     'end': 114958349,
-    'genome_build': 'GRCh37',
+    'genome_build': BUILD,
     'variant': "10:114758349_C/T"
 }
 max_region_scale = 10_000_000
@@ -32,6 +37,9 @@ min_region_scale = 20_000
 
 # Main definition of LocusZoom
 # This contains many of the data sources from the Samples, but not all plots use all data sources
+LOCAL_API = 'http://127.0.0.1:5000/api'
+BASE_API = 'https://portaldev.sph.umich.edu/api/v1'
+
 lz = locuszoom_4_dash.Locuszoom4Dash(
         id='lz',
         data_sources=[
@@ -40,10 +48,11 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'AssociationLZ',
                     {
-                        'url': 'http://10.112.80.49:16888/api/statistic/single/',
+                        'url': f'{LOCAL_API}/statistic/single/',
                         'source': 'AD',
                         'id_field':'variant',
-                        'build': 'GRCh37',
+                        'trackInfo': f"<strong>GWAS study: 45</strong><br>Build: {BUILD}<br></div>",
+                        'build': BUILD,
                     },
                 ]
             },
@@ -55,7 +64,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                         'url': 'https://portaldev.sph.umich.edu/ld/',
                         'source': '1000G',
                         'population': 'ALL',
-                        'build': 'GRCh37',
+                        'build': BUILD,
                     },
                 ]
             },
@@ -64,8 +73,8 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'RecombLZ',
                     {
-                        'url': 'https://portaldev.sph.umich.edu/api/v1/annotation/recomb/results/',
-                        'build': 'GRCh37',
+                        'url': f'{BASE_API}/annotation/recomb/results/',
+                        'build': BUILD,
                     },
                 ]
             },
@@ -74,8 +83,9 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'GeneLZ',
                     {
-                        'url': 'https://portaldev.sph.umich.edu/api/v1/annotation/genes/',
-                        'build': 'GRCh37',
+                        'url': f'{BASE_API}/annotation/genes/',
+                        'build': BUILD,
+                        'trackInfo': f"<strong>ENSEMBL Gene annotation</strong><br>Build: {BUILD}<br></div>",
                     },
                 ]
             },
@@ -85,7 +95,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     'GeneConstraintLZ',
                     {
                         'url': 'https://gnomad.broadinstitute.org/api/',
-                        'build': 'GRCh37',
+                        'build': BUILD,
                     },
                 ]
             },
@@ -94,18 +104,9 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'data': [
                     'GwasCatalogLZ',
                     {
-                        'url': 'https://portaldev.sph.umich.edu/api/v1/annotation/gwascatalog/results/',
-                        'build': 'GRCh37',
-                    },
-                ]
-            },
-            {
-                'name': 'phewas',
-                'data': [
-                    'PheWASLZ',
-                    {
-                        'url': 'http://10.112.80.49:16888/api/statistic/phewas/',
-                        'build': 'GRCh37',
+                        'url': f'{BASE_API}/annotation/gwascatalog/results/',
+                        'build': BUILD,
+                        'trackInfo': f"EBI GWAS Catalog associations Build: {BUILD}",
                     },
                 ]
             },
@@ -117,6 +118,18 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'max_region_scale': max_region_scale,
                 'min_region_scale': min_region_scale,
             },
+            'mutate': [
+                {
+                    'jsonpath': '$..panels[?(@.tag === "gwascatalog")].toolbar.widgets',
+                    'setval': """
+                        (old_widgets) => old_widgets.concat([{
+                            type: "title",
+                            position: "left",
+                            title: "AAP",
+                        }]));
+                    """
+                },
+            ]
         },
         state=default_state
     )
@@ -124,6 +137,11 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
 app.layout = html.Div([
     lz,
     html.Hr(),
+    html.Button(
+        'Change layout',
+        id='switch-button',
+        n_clicks=0,
+    ),
     html.Button(
         'Zoom in (+)',
         id='zoomin',
@@ -157,6 +175,7 @@ app.layout = html.Div([
         style={"width": "15%"},
     ),
     html.P(id='region-size'),
+    html.Pre(id='logger'),
 ])
 
 def get_gene_location(gene, padding=300_000):
@@ -228,6 +247,27 @@ def change_region(zoomin, zoomout, gene, regionChange, coordinates, state):
         raise PreventUpdate
     #Clear out gene value so user could enter coordinates later
     return state, '', f"{state['chr']}:{state['start']}-{state['end']}", f"Region: {state['end']-state['start']:,} bp"
+
+
+# Log any clicks
+@callback(
+    Output('logger','children'),
+    Input('lz','elementSelection'),
+)
+def loggy(element_selection):
+    return f'Selected: {json.dumps(element_selection,indent=4)}'
+
+
+# Update the layout
+@callback(
+    Output('lz', 'layout'),
+    Input('switch-button','n_clicks'),
+    State('lz','layout'),
+    prevent_initial_call=False,
+)
+def update_layout(switch, layout):
+    layout['name'] = 'association_catalog' if layout['name'] == 'modified_association_catalog' else 'modified_association_catalog'
+    return layout
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0')
