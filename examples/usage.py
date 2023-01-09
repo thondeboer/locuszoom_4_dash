@@ -50,7 +50,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                         'url': f'{BASE_API}/statistic/single/',
                         'source': 45,
                         'id_field':'variant',
-                        'trackInfo': f"<strong>GWAS study: 45</strong><br>Build: {BUILD}<br></div>",
+                        'dataInfo': f"<strong>GWAS study: 45</strong> Build: {BUILD}",
                         'build': BUILD,
                     },
                 ]
@@ -64,6 +64,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                         'source': '1000G',
                         'population': 'ALL',
                         'build': BUILD,
+                        'dataInfo': f"<strong>UMICH LD server 1000G</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -74,6 +75,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': f'{BASE_API}/annotation/recomb/results/',
                         'build': BUILD,
+                        'dataInfo': f"<strong>Recomb</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -84,7 +86,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': f'{BASE_API}/annotation/genes/',
                         'build': BUILD,
-                        'trackInfo': f"<strong>ENSEMBL Gene annotation</strong><br>Build: {BUILD}<br></div>",
+                        'dataInfo': f"<strong>ENSEMBL Gene annotation</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -95,6 +97,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': 'https://gnomad.broadinstitute.org/api/',
                         'build': BUILD,
+                        'dataInfo': f"<strong>GnomAD Constraints</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -105,7 +108,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': f'{BASE_API}/annotation/gwascatalog/results/',
                         'build': BUILD,
-                        'trackInfo': f"EBI GWAS Catalog associations Build: {BUILD}",
+                        'dataInfo': f"<strong>EBI GWAS Catalog associations</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -116,7 +119,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': f'{BASE_API}/annotation/intervals/results/',
                         'source': 19,
-                        'trackInfo': "<strong>Chromatin State Segmentation by HMM from ENCODE/Broad</strong><br>Build: 37<br>Assay: ChIP-seq<br>Tissue: ALL</div>"
+                        'dataInfo': f"<strong>Chromatin State Segmentation by HMM from ENCODE/Broad</strong> Build: {BUILD} Assay: ChIP-seq Tissue: ALL"
                     },
                 ]
             },
@@ -133,7 +136,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 {
                     'name': 'intervals',
                     'overrides': {
-                        'height': 400
+                        'height': 100,
                     }
                 }
             ],
@@ -144,8 +147,12 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     'setval': 75
                 },
                 {
-                    'jsonpath': '$..panels[?(@.tag === "gwascatalog")].height',
-                    'setval': 75
+                    'jsonpath': '$..panels[?(@.tag === "intervals")].legend.hidden',
+                    'setval': False
+                },
+                {
+                    'jsonpath': '$..data_layers[?(@.tag === "intervals")].always_hide_legend',
+                    'setval': False
                 },
             ]
         },

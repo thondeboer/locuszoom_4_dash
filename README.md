@@ -9,10 +9,6 @@ This version does not expose all of the functionality of LocusZoom.js, but it pr
 This is the minimal python code to render a LocusZoom image:
 
 ```python
-# To make testing easier during development, adding top directory as module path for easier import - Remove in production
-import os, sys
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-
 import locuszoom_4_dash
 from dash import Dash, html
 
@@ -103,7 +99,7 @@ if __name__ == '__main__':
     app.run_server(debug=True)
 ```
 
-It exposes the ```state``` for the LocusZoom image, which contains the focus of the plot. It allows the user to update the location of the focus from the DASH component. It also allows the user to change the location by dragging the image and/or zooming in/out and it will conversely update the attributes for the components, so Dash callbacks can respond to it.
+It exposes the ```state``` for the LocusZoom image, which contains the focus of the plot. It allows the user to update the location of the focus from the DASH component. It also allows the user to change the location by dragging the image and/or zooming in/out and it will conversely update the properties for the components, so Dash callbacks can respond to it.
 
 ![LocusZoom 4 DASH full](https://github.com/thondeboer/locuszoom_4_dash/raw/master/img/LocusZoom_4_DASH_full.gif "LocusZoom 4 DASH full")
 
@@ -116,19 +112,19 @@ Some additional functionality was added to the component allowing for adding and
 ![LocusZoom 4 DASH Update](https://github.com/thondeboer/locuszoom_4_dash/raw/master/img/LocusZoom_4_DASH_UpdateJan2023.gif "LocusZoom 4 DASH Update Jan 2023")
 ### Added functionality
 1. The Dash component can now react to events in the Locuszoom plot, such as selection of points on the plots, regions or genes.
-    * The examples will show the information that is captured in the event in a ```Pre``` component but is in essence the ```element``` attribute of the component.
-    * The exception is for the ```genes``` track. The ```transcripts``` attribute that contains a full list of all the isoforms of the gene is NOT exported to the Dash component, since it is a circular construct (each transcript has as its child also a gene, which has trascripts, etc.). The canonical transcript information IS provided in the ```element``` since that does not have a circular construct.
-    * For the same reason, the ```element``` does also not contain the ```parents``` attribute.
+    * The examples will show the information that is captured in the event in a ```Pre``` component but is in essence the ```element``` property of the component.
+    * The exception is for the ```genes``` track. The ```transcripts``` property that contains a full list of all the isoforms of the gene is NOT exported to the Dash component, since it is a circular construct (each transcript has as its child also a gene, which has transcripts, etc.). The canonical transcript information IS provided in the ```element``` since that does not have a circular construct.
+    * For the same reason, the ```element``` does also not contain the ```parents``` property.
 1. Tracks can now show ```trackInfo``` field in a drop down to provide the user with more information about the track.
-    * The track info will be rendered as HTML, so can contain standard HTML markup
-    * The ```trackInfo``` attribute is defined in the Datasource that the track is related to
-    * Example: ```'trackInfo': f"<strong>GWAS study: 45</strong><br>Build: {BUILD}<br></div>"```
-1. Panels can be added to the standard plot layouts with the ```addPanel``` attribute in the ```layout``` attribute
-    * In the ```layout``` attribute you can define a ```addPanel``` property which is a list of objects
+    * The track info will be constructed from the ```dataInfo``` property of the ```data_source``` definition
+    * The track info will be rendered as HTML, so the ```dataInfo``` property can contain standard HTML markup
+    * Example: ```'dataInfo': f"<strong>GWAS study: 45</strong><br>Build: {BUILD}"```
+1. Panels can be added to the standard plot layouts with the ```addPanel``` property in the ```layout``` property
+    * In the ```layout``` property you can define a ```addPanel``` property which is a list of objects
     * Each object contains two properties; ```name``` and ```overrides``` which correspond to the values in the ```LocusZoom.Layouts.get()``` method
     * See the [Layouts and Visualization Options](https://statgen.github.io/locuszoom/docs/guides/rendering_layouts.html) page for more on adding panels to a layout
 1. A standard layout can be changed using the ```LocusZoom.Layouts.mutate_attrs``` method"
-    * In the ```layout``` attribute, you can define a ```mutate_attrs``` property which is a list of objects
+    * In the ```layout``` property, you can define a ```mutate_attrs``` property which is a list of objects
     * Each object, contains two properties; ```jsonpath``` and ```setval``` that corresponds to the two parameters for the ```LocusZoom.Layouts.mutate_attrs``` method
         * In case the ```setval``` needs to be a full javascript function, enclose it in triple quotes as shown below
         * Internally, this is using an ```eval``` method to parse the string into proper Javascript and while this is usually not recommended, it is up to the user to ensure nothing "evil" is being done with the ```eval```!
@@ -136,7 +132,7 @@ Some additional functionality was added to the component allowing for adding and
 
 Here are some examples:
 
-Since the GWASCatalog is only 50px high, the trackInfo menu does not render properly. To adjust the height, using the following as a ```mutate``` attribute in the layout definition:
+Since the GWASCatalog is only 50px high, the trackInfo menu does not render properly. To adjust the height, using the following as a ```mutate``` property in the layout definition:
 
 ```python
         layout={
@@ -155,32 +151,6 @@ Since the GWASCatalog is only 50px high, the trackInfo menu does not render prop
         },
 ```
 
-Alternatively, you could make the trackInfo show up as the title, using the following ```mutate_attrs``` property. This shows how to use a full Javascript function definition.
-
-```python
-...
-        layout={
-            'type':'plot',
-            'name':'association_catalog',
-            'override': {
-                'max_region_scale': max_region_scale,
-                'min_region_scale': min_region_scale,
-            },
-            'mutate_attrs': [
-                {
-                    'jsonpath': '$..panels[?(@.tag === "gwascatalog")].toolbar.widgets',
-                    'setval': """
-                        (old_widgets) => old_widgets.concat([{
-                            type: "title",
-                            position: "left",
-                            title: "Track Info : " + self.data_sources.get('catalog')._config.trackInfo,
-                        }])
-                    """
-                },
-            ]
-        },
-...
-```
 Here's an example to always show the Intervals legend:
 
 ```python
@@ -206,7 +176,7 @@ Here's an example to always show the Intervals legend:
 ...
 ```
 
-This example shows the additioin of the intervals panel to the standard association_catalog panel:
+This example shows the addition of the intervals panel to the standard association_catalog panel:
 
 ```python
 ...
@@ -223,13 +193,54 @@ This example shows the additioin of the intervals panel to the standard associat
                 {
                     'name': 'intervals',
                     'overrides': {
-                        'height': 400
+                        'height': 100
                     }
                 }
             ],
 ...
 ```
 
+This examples shows a more complex modification, requireing a small piece of Javascript code. It is encapsulated in thriple quotes and will be ```eval```uated as Javascript. The code modifies the default PheWas plot, to show a line on the gene panel, showing the location of the variant.
+
+```python
+...
+        layout={
+            'type':'plot',
+            'name':'standard_phewas',
+            'override': {
+                'max_region_scale': max_region_scale,
+                'min_region_scale': min_region_scale,
+            },
+            'mutate_attrs': [
+                {
+                    'jsonpath': '$..panels[?(@.tag === "genes")].data_layers',
+                    'setval': """
+                        (old_layers) => {
+                            var VARIANT_PATTERN = /(\d+):(\d+)_([ATGC])\/([ATGC])/;
+                            var variantGroups = VARIANT_PATTERN.exec(figure.state.variant);
+                            var variantPosition = Number(variantGroups[2]);
+                            old_layers.push(
+                                {
+                                    id: "variant",
+                                    type: "orthogonal_line",
+                                    orientation: "vertical",
+                                    offset: variantPosition,
+                                    style: {
+                                        "stroke": "#FF3333",
+                                        "stroke-width": "2px",
+                                        "stroke-dasharray": "4px 4px"
+                                    }
+                                }
+                            );
+                            return old_layers;
+                        }
+                    """
+                },
+            ]
+        },
+...
+
+```
 # Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)

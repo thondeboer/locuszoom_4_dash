@@ -40,7 +40,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': f'{BASE_API}/annotation/genes/',
                         'build': BUILD,
-                        'trackInfo': f"<strong>ENSEMBL Gene annotation</strong><br>Build: {BUILD}<br></div>",
+                        'dataInfo': f"<strong>ENSEMBL Gene annotation</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -51,6 +51,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': 'https://gnomad.broadinstitute.org/api/',
                         'build': BUILD,
+                        'dataInfo': f"<strong>GnomAD Constraints</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -61,7 +62,7 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                     {
                         'url': f'{BASE_API}/statistic/phewas/',
                         'build': BUILD,
-                        'trackInfo': f"<strong>Phewas source: UMICH</strong><br>Build: {BUILD}<br></div>",
+                        'dataInfo': f"<strong>Phewas source: UMICH</strong> Build: {BUILD}",
                     },
                 ]
             },
@@ -73,6 +74,32 @@ lz = locuszoom_4_dash.Locuszoom4Dash(
                 'max_region_scale': max_region_scale,
                 'min_region_scale': min_region_scale,
             },
+            'mutate_attrs': [
+                {
+                    'jsonpath': '$..panels[?(@.tag === "genes")].data_layers',
+                    'setval': """
+                        (old_layers) => {
+                            var VARIANT_PATTERN = /(\d+):(\d+)_([ATGC])\/([ATGC])/;
+                            var variantGroups = VARIANT_PATTERN.exec(figure.state.variant);
+                            var variantPosition = Number(variantGroups[2]);
+                            old_layers.push(
+                                {
+                                    id: "variant",
+                                    type: "orthogonal_line",
+                                    orientation: "vertical",
+                                    offset: variantPosition,
+                                    style: {
+                                        "stroke": "#FF3333",
+                                        "stroke-width": "2px",
+                                        "stroke-dasharray": "4px 4px"
+                                    }
+                                }
+                            );
+                            return old_layers;
+                        }
+                    """
+                },
+            ]
         },
         state=default_state
     )

@@ -2,7 +2,7 @@
 name = "Locuszoom4Dash"
 uuid = "1b08a953-4be3-4667-9a23-86c07cc9c559"
 authors = ["Thon Deboer <thondeboer@me.com>"]
-version = "0.7.1"
+version = "0.9.0"
 
 [deps]
 Dash = "1b08a953-4be3-4667-9a23-3db579824955"
